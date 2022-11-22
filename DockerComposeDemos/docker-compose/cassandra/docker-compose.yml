@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  cassandra:
+    image: cassandra:4.0.7
+    restart: always
+    volumes: # TODO: Create directory on your machine
+      - "/c/docker/cassandra:/var/lib/cassandra"
+    ports: # TODO: Set other port on the left if it's already used on your machine
+      - "9042:9042"
+    container_name: cassandra
+    networks:
+      - cassandra_network
+
+# TODO: docker network create cassandra_network --driver bridge
+networks:
+  cassandra_network:

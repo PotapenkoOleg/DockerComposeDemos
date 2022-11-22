@@ -1,0 +1,72 @@
+version: '3'
+
+services:
+  
+  cassandra-1:
+    image: cassandra:4.0.7
+    networks:
+      - stargate-network
+    ports:
+      - 9044:9042
+    environment:
+      - HEAP_NEWSIZE=128M
+      - MAX_HEAP_SIZE=1024M
+      - CASSANDRA_SEEDS=cassandra-1
+      - CASSANDRA_CLUSTER_NAME=c4-4.0.7-cluster
+  
+  cassandra-2:
+    image: cassandra:4.0.7
+    networks:
+      - stargate-network
+    depends_on:
+      - cassandra-1
+    environment:
+      - HEAP_NEWSIZE=128M
+      - MAX_HEAP_SIZE=1024M
+      - CASSANDRA_SEEDS=cassandra-1
+      - CASSANDRA_CLUSTER_NAME=c4-4.0.7-cluster
+  
+  cassandra-3:
+    image: cassandra:4.0.7
+    networks:
+      - stargate-network
+    depends_on:
+      - cassandra-1
+      - cassandra-2
+    environment:
+      - HEAP_NEWSIZE=128M
+      - MAX_HEAP_SIZE=1024M
+      - CASSANDRA_SEEDS=cassandra-1
+      - CASSANDRA_CLUSTER_NAME=c4-4.0.7-cluster
+  
+  stargate:
+    image: stargateio/stargate-4_0:v1.0.68
+    depends_on:
+      - cassandra-3
+    networks:
+      - stargate-network
+    ports:
+      # cql
+      - 9045:9042
+      # graphql
+      - 8080:8080
+      # auth
+      - 8081:8081
+      # REST
+      - 8082:8082
+      # health
+      - 8084:8084
+      # grpc
+      - 8090:8090
+    environment:
+      - JAVA_OPTS="-Xmx2G"
+      - CLUSTER_NAME=c4-4.0.7-cluster
+      - CLUSTER_VERSION=4.0
+      - SEED=cassandra-1
+      - RACK_NAME=rack1
+      - DATACENTER_NAME=datacenter1
+      - ENABLE_AUTH=true
+
+# TODO: docker network create stargate-network --driver bridge
+networks:
+  stargate-network:

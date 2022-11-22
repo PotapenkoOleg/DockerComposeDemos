@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+
+  trino:
+    image: trinodb/trino:403
+    restart: always
+    depends_on: # TODO: set DBs here
+      - postgres
+      - cassandra
+    volumes: # TODO: Set other port on the left if it's already used on your machine
+      - "/c/docker/trino:/etc/trino/catalog"
+    ports: # TODO: Set other port on the left if it's already used on your machine
+      - "8080:8080"
+    container_name: trino
+    networks:
+      - trino_network
+
+networks:
+  trino_network:
