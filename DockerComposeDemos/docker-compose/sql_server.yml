@@ -1,0 +1,25 @@
+# https://hub.docker.com/r/microsoft/mssql-server
+# https://learn.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker
+# https://learn.microsoft.com/en-us/sql/linux/sql-server-linux-docker-container-configure?view=sql-server-ver17&pivots=cs1-bash#persist-your-data
+services:
+  sql_server:
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    restart: "always"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "wOf-odESTO2r"
+      # MSSQL_PID: "Standard|Developer"
+    volumes:
+      - "sql_server_volume:/var/opt/mssql"
+    ports:
+      - "1433:1433"
+    container_name: sql_server
+#    networks:
+#      - sql_server_network
+
+#networks:
+#  sql_server_network:
+
+volumes:
+  sql_server_volume:
+  # external: true
