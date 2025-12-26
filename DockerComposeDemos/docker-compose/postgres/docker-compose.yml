@@ -1,21 +1,22 @@
-version: '3'
-
 services:
-
   postgres:
-    image: postgres:15.1
+    image: postgres:latest
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       PGDATA: /var/lib/postgresql/data/pgdata
-    volumes: # TODO: Create directory on your machine
-      - "/c/docker/postgres:/var/lib/postgresql/data"
+    volumes: # TODO: Create directory/volume on your machine
+      - "postgres_vol:/var/lib/postgresql/data"
     ports: # TODO: Set other port on the left if it's already used on your machine
       - "5432:5432"
     container_name: postgres
-    networks:
-      - postgres_network
+#    networks:
+#      - postgres_network
 
-networks:
-  postgres_network:
+#networks:
+#  postgres_network:
+
+volumes:
+  postgres_vol:
+  # external: true
